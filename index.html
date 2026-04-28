@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Paletas</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="fonts.css">
+</head>
+
+<body>
+  
+  <h1>ColorFly</h1>
+  
+  <h2>STUDIO</h2>
+
+  <label>Crea tu paleta de colores para usarla en tus propuestas visuales. </label>
+ 
+  <hr class="linea-divisoria">
+
+  <div class="controles">
+        
+     <label for="tamano-paleta">Cantidad de colores:</label>
+   
+    <select id="tamano-paleta">
+      <option value="0">0</option>
+      <option value="6">6</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+    </select>
+
+    <button id="generar-btn" type="button">Generar</button>
+    
+  </div>
+  <div id="paleta" class="paleta">
+    <div class="formato-color">
+      <span id="formato-label">Elije el formato que quieres ver: </span>
+
+      <label>
+        <input type="radio" name="formato-color" value="HEX" checked>
+        HEX
+      </label>
+
+      <label>
+        <input type="radio" name="formato-color" value="HSL">
+        HSL
+      </label>
+      <br>
+      <div id="mensaje-respuesta" class="mensaje-respuesta"></div>
+      </div>
+  </div>
+  <p class="copiar-color">Haz clic en un color para copiar su código.</p>
+  
+
+  <script src="script.js"></script>
+</body>
+</html>
