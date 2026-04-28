@@ -1,20 +1,20 @@
 @font-face {
   font-family: 'Galindo';
-  src: url('./fonts/Galindo-Regular.ttf') format('truetype');
+  src: url('./Fonts/Galindo-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Roboto';
-  src: url('./fonts/Roboto-Regular.ttf') format('truetype');
+  src: url('./Fonts/Roboto-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'FredokaOne';
-  src: url('./fonts/FredokaOne-Regular.otf') format('truetype');
+  src: url('./Fonts/FredokaOne-Regular.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
