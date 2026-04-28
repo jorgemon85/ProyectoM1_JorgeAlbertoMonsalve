@@ -76,8 +76,30 @@ button {
 
 button:hover {
   background-color: #852b5f;
-  /* Transición suave en el botón al pasar el mouse */
   transition: background-color 0.3s ease;
+}
+
+/* --- CONTADOR DE BLOQUEADOS --- */
+/* Siempre ocupa su espacio, pero se vuelve invisible cuando está "oculto"
+   Así nada se desplaza al aparecer o desaparecer */
+#contador-bloqueados {
+  display: block;
+  margin: 8px auto 0 auto;
+  font-size: 15px;
+  font-weight: bold;
+  color: #474747;
+  height: 22px;
+  /* altura fija para que siempre ocupe el mismo espacio */
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* En lugar de display:none usamos visibility:hidden + opacity:0
+   El elemento sigue ocupando espacio pero no se ve */
+.oculto {
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .paleta {
@@ -93,7 +115,6 @@ button:hover {
 }
 
 /* --- ANIMACIÓN DE ENTRADA --- */
-/* Define cómo empieza la tarjeta: invisible y desplazada hacia abajo */
 @keyframes aparecerTarjeta {
   from {
     opacity: 0;
@@ -122,21 +143,15 @@ button:hover {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.726);
   overflow-wrap: anywhere;
-
-  /* Se aplica la animación de entrada al crear cada tarjeta */
   animation: aparecerTarjeta 0.4s ease forwards;
-
-  /* Transiciones suaves al hacer hover y al bloquearse */
   transition: transform 0.2s ease, outline 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Al pasar el mouse la tarjeta sube un poco y la sombra se agranda */
 .color-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* Borde visible cuando el color está bloqueado */
 .color-card.bloqueada {
   outline: 3px solid #ffffff;
 }
@@ -146,7 +161,6 @@ button:hover {
   cursor: pointer;
   align-self: flex-end;
   z-index: 1;
-  /* Transición suave al agrandar el candado */
   transition: transform 0.2s ease;
 }
 
@@ -161,7 +175,7 @@ button:hover {
 }
 
 .copiar-color {
-  margin-top: 40px;
+  margin-top: 20px;
   font-weight: bold;
   font-size: 17px;
   color: #696969;

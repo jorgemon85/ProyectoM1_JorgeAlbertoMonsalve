@@ -3,6 +3,7 @@ const generarBtn = document.getElementById("generar-btn");
 const tamanoPaleta = document.getElementById("tamano-paleta");
 const formatoColor = document.querySelectorAll('input[name="formato-color"]');
 const mensajeRta = document.getElementById("mensaje-respuesta");
+const contadorBloqueados = document.getElementById("contador-bloqueados");
 let tiempoMensaje;
 
 // Array que guarda la paleta actual de colores
@@ -61,17 +62,34 @@ function obtenerCodigoColor(color) {
   }
 }
 
-// --- NUEVA FUNCIÓN: calcula si el texto debe ser blanco o negro ---
-// Usa la fórmula de luminosidad perceptual: el ojo humano es más
-// sensible al verde, luego al rojo, y menos al azul.
-// Si el resultado es mayor a 128, el color es claro → texto negro
-// Si el resultado es menor a 128, el color es oscuro → texto blanco
+// Calcula si el texto debe ser blanco o negro según la luminosidad del fondo
 function calcularColorTexto(rojo, verde, azul) {
   const luminosidad = (rojo * 0.299) + (verde * 0.587) + (azul * 0.114);
   if (luminosidad > 128) {
-    return "#000000"; // Color claro → texto negro
+    return "#000000";
   } else {
-    return "#ffffff"; // Color oscuro → texto blanco
+    return "#ffffff";
+  }
+}
+
+// --- FUNCIÓN CONTADOR DE BLOQUEADOS ---
+function actualizarContador() {
+  let bloqueados = 0;
+
+  for (let i = 0; i < paletaActual.length; i++) {
+    if (paletaActual[i].bloqueado === true) {
+      bloqueados++;
+    }
+  }
+
+  if (bloqueados > 0) {
+    // Hay bloqueados: muestra el contador y quita la clase oculto
+    contadorBloqueados.textContent = "🔒 " + bloqueados + " de " + paletaActual.length + " bloqueados";
+    contadorBloqueados.classList.remove("oculto");
+  } else {
+    // No hay bloqueados: oculta el contador agregando la clase oculto
+    contadorBloqueados.textContent = "";
+    contadorBloqueados.classList.add("oculto");
   }
 }
 
@@ -138,10 +156,7 @@ function renderizarPaleta() {
     tarjeta.style.backgroundColor = "rgb(" + color.rojo + ", " + color.verde + ", " + color.azul + ")";
     textoColor.textContent = obtenerCodigoColor(color);
 
-    // Se calcula el color del texto según el fondo de la tarjeta
     const colorTexto = calcularColorTexto(color.rojo, color.verde, color.azul);
-
-    // Se aplica el color al texto del código y al candado
     textoColor.style.color = colorTexto;
     candado.style.color = colorTexto;
 
@@ -160,6 +175,8 @@ function renderizarPaleta() {
         mostrarMensaje("Color desbloqueado 🔓");
         tarjeta.classList.remove("bloqueada");
       }
+
+      actualizarContador();
     });
 
     tarjeta.addEventListener("click", function () {
@@ -195,6 +212,7 @@ function crearPaleta() {
   generarColores();
   renderizarPaleta();
   mostrarMensaje("Haz generado una nueva paleta de " + tamanoPaleta.value + " colores");
+  actualizarContador();
 }
 
 // --- FUNCIÓN DE MICROFEEDBACK ---
