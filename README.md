@@ -16,13 +16,11 @@ ColorFly Studio es una herramienta web diseñada para la agencia de branding fic
 
 - **Generación de paletas aleatorias** con un botón principal
 - **Selección del tamaño de paleta:** 6, 8 o 9 colores
-- **Dos formatos de color disponibles:**
-  - `HEX` (ej: #A3F2C1)
-  - `HSL` (ej: 145, 78%, 79%)
+- **Dos formatos de color disponibles:** HEX y HSL
 - **Cambio de formato en tiempo real** sin necesidad de regenerar la paleta
 - **Copia al portapapeles** al hacer clic sobre cualquier tarjeta de color
-- **Microfeedback visual (toast):** mensajes de confirmación animados para cada acción del usuario
-- **Paletas con coherencia cromática:** los colores se generan a partir de una base aleatoria con variaciones controladas
+- **Microfeedback visual (toast):** mensajes de confirmación animados para cada acción
+- **Paletas con coherencia cromática:** colores generados con variaciones controladas
 
 ---
 
@@ -57,6 +55,127 @@ ProyectoM1_JorgeAlbertoMonsalve/
 
 ---
 
+## 💻 Fragmentos de código explicados
+
+### 1. Generación de colores con coherencia cromática
+
+En lugar de generar colores totalmente aleatorios, se define una base RGB aleatoria y cada color adicional varía como máximo ±35 en cada canal. Esto garantiza que los colores de la paleta sean visualmente armónicos entre sí.
+
+```javascript
+const rango = 35;
+const rojoBase = Math.floor(Math.random() * 256);
+const verdeBase = Math.floor(Math.random() * 256);
+const azulBase = Math.floor(Math.random() * 256);
+
+// Para cada color adicional, se varía la base dentro del rango
+rojo = Math.min(255, Math.max(0, rojoBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+```
+
+- `Math.random() * 256` genera un valor base aleatorio entre 0 y 255.
+- `Math.min(255, Math.max(0, ...))` asegura que el resultado nunca salga del rango válido de un color RGB.
+- El `rango * 2 + 1` define una ventana de variación de 71 valores posibles alrededor de la base.
+
+---
+
+### 2. Conversión de RGB a HSL
+
+La conversión al formato HSL se implementó manualmente aplicando la fórmula matemática estándar, sin librerías externas.
+
+```javascript
+const rojoDecimal = rojo / 255;
+const verdeDecimal = verde / 255;
+const azulDecimal = azul / 255;
+
+const maximo = Math.max(rojoDecimal, verdeDecimal, azulDecimal);
+const minimo = Math.min(rojoDecimal, verdeDecimal, azulDecimal);
+const luminosidad = (maximo + minimo) / 2;
+
+if (maximo !== minimo) {
+  const diferencia = maximo - minimo;
+  saturacion = luminosidad > 0.5
+    ? diferencia / (2 - maximo - minimo)
+    : diferencia / (maximo + minimo);
+}
+```
+
+- Los valores RGB se normalizan dividiéndolos entre 255 para trabajar en el rango [0, 1].
+- La **luminosidad** es el promedio entre el canal más alto y el más bajo.
+- La **saturación** se calcula de forma diferente según si la luminosidad es mayor o menor a 0.5.
+
+---
+
+### 3. Copia al portapapeles con microfeedback
+
+Al hacer clic en una tarjeta de color, se copia el código al portapapeles usando la API nativa del navegador y se muestra un mensaje temporal al usuario.
+
+```javascript
+tarjeta.addEventListener("click", function () {
+  const colorSeleccionado = textoColor.textContent;
+
+  navigator.clipboard.writeText(colorSeleccionado)
+    .then(function () {
+      mensajeRta.textContent = "Su color ha sido copiado con exito";
+      mensajeRta.classList.add("mensaje-activo");
+      clearTimeout(tiempoMensaje);
+      tiempoMensaje = setTimeout(function () {
+        mensajeRta.classList.remove("mensaje-activo");
+      }, 2000);
+    });
+});
+```
+
+- `navigator.clipboard.writeText()` es una API moderna que permite copiar texto al portapapeles sin librerías externas.
+- `.then()` se ejecuta cuando la copia fue exitosa, mostrando el mensaje de confirmación.
+- `setTimeout` oculta el mensaje después de 2 segundos, creando el efecto de toast.
+
+---
+
+### 4. Cambio de formato en tiempo real
+
+Cuando el usuario cambia entre HEX y HSL, todas las tarjetas existentes se actualizan sin regenerar la paleta, manteniendo los mismos colores.
+
+```javascript
+for (let i = 0; i < formatoColor.length; i++) {
+  formatoColor[i].addEventListener("change", function () {
+    const tarjetas = document.querySelectorAll(".color-card");
+
+    for (let j = 0; j < tarjetas.length; j++) {
+      mostrarValorColor(tarjetas[j]);
+    }
+  });
+}
+```
+
+- Se recorren todos los radio buttons de formato con un `for`.
+- Al detectar un cambio, se seleccionan todas las tarjetas del DOM con `querySelectorAll`.
+- Cada tarjeta llama a `mostrarValorColor()` que recalcula y muestra el código en el nuevo formato usando los valores RGB guardados en `dataset`.
+
+---
+
+### 5. HTML semántico y accesibilidad
+
+La estructura del HTML usa etiquetas semánticas y buenas prácticas de accesibilidad.
+
+```html
+<label for="tamano-paleta">Cantidad de colores:</label>
+<select id="tamano-paleta">
+  <option value="6">6</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+</select>
+
+<label>
+  <input type="radio" name="formato-color" value="HEX" checked>
+  HEX
+</label>
+```
+
+- El `<label for="tamano-paleta">` está asociado al `<select>` mediante el atributo `id`, mejorando la accesibilidad para lectores de pantalla.
+- Los `<input type="radio">` están envueltos dentro de `<label>`, permitiendo hacer clic en el texto para seleccionarlos.
+- Se usa `checked` en el radio HEX para definir un valor por defecto claro al usuario.
+
+---
+
 ## 🚀 Cómo ejecutar el proyecto localmente
 
 1. Clona el repositorio:
@@ -69,31 +188,17 @@ git clone git@github.com:jorgemon85/ProyectoM1_JorgeAlbertoMonsalve.git
 cd ProyectoM1_JorgeAlbertoMonsalve
 ```
 
-3. Abre el archivo `index.html` en tu navegador preferido. No requiere instalación de dependencias ni servidor.
+3. Abre el archivo `index.html` en tu navegador. No requiere instalación de dependencias ni servidor.
 
 ---
 
-## 🌐 Cómo ver el despliegue en producción
+## 🌐 Despliegue en producción
 
-La aplicación está publicada con **GitHub Pages** y puede verse directamente en:
+La aplicación está publicada con **GitHub Pages**:
 
 👉 [https://jorgemon85.github.io/ProyectoM1_JorgeAlbertoMonsalve/](https://jorgemon85.github.io/ProyectoM1_JorgeAlbertoMonsalve/)
 
----
-
-## 🧠 Decisiones técnicas
-
-- **Generación cromática coherente:** en lugar de generar colores completamente aleatorios, se definió una base RGB aleatoria y cada color adicional se genera con una variación máxima de ±35 en cada canal. Esto produce paletas visualmente armónicas en lugar de colores totalmente dispares.
-
-- **Conversión RGB → HSL manual:** la conversión al formato HSL se implementó desde cero con lógica matemática en JavaScript, sin usar librerías externas, aplicando la fórmula estándar de conversión.
-
-- **Copia al portapapeles:** se usó la API nativa `navigator.clipboard.writeText()` para copiar el código del color al hacer clic en una tarjeta.
-
-- **Microfeedback tipo toast:** se implementó un sistema de mensajes temporales con `setTimeout` que informa al usuario sobre cada acción: generar paleta, copiar color y cambiar formato.
-
-- **Fuentes locales:** las fuentes (FredokaOne, Galindo, Roboto) se cargan desde archivos locales mediante `@font-face` en `fonts.css`, sin depender de servicios externos como Google Fonts.
-
-- **Sin estilos inline:** todos los estilos están en archivos CSS externos (`styles.css` y `fonts.css`), siguiendo las buenas prácticas de separación de responsabilidades.
+Para desplegar una nueva versión basta con hacer `git push` a la rama `main`. GitHub Pages detecta el cambio automáticamente y publica la nueva versión en pocos minutos.
 
 ---
 
@@ -116,5 +221,5 @@ La aplicación está publicada con **GitHub Pages** y puede verse directamente e
 
 ## 👨‍💻 Autor
 
-**Jorge Alberto Monsalve**
+**Jorge Alberto Monsalve**  
 Estudiante Full Stack — Soy Henry, Módulo 1
