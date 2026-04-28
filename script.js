@@ -64,35 +64,49 @@ function obtenerCodigoColor(color) {
 // --- FUNCIONES DE PALETA ---
 
 function generarColores() {
-  // Se limpia el array antes de generar una nueva paleta
-  paletaActual = [];
-
   const total = Number(tamanoPaleta.value);
   const rango = 35;
   const rojoBase = Math.floor(Math.random() * 256);
   const verdeBase = Math.floor(Math.random() * 256);
   const azulBase = Math.floor(Math.random() * 256);
 
-  for (let i = 0; i < total; i++) {
-    let rojo = rojoBase;
-    let verde = verdeBase;
-    let azul = azulBase;
+  // Si el array está vacío, lo llenamos desde cero
+  // Si ya tiene colores, solo reemplazamos los que NO están bloqueados
+  if (paletaActual.length === 0) {
+    for (let i = 0; i < total; i++) {
+      let rojo = rojoBase;
+      let verde = verdeBase;
+      let azul = azulBase;
 
-    if (i > 0) {
-      rojo = Math.min(255, Math.max(0, rojoBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
-      verde = Math.min(255, Math.max(0, verdeBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
-      azul = Math.min(255, Math.max(0, azulBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+      if (i > 0) {
+        rojo = Math.min(255, Math.max(0, rojoBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+        verde = Math.min(255, Math.max(0, verdeBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+        azul = Math.min(255, Math.max(0, azulBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+      }
+
+      // bloqueado: false significa que el color puede cambiar al regenerar
+      paletaActual.push({ rojo: rojo, verde: verde, azul: azul, bloqueado: false });
+    }
+  } else {
+    // Si cambia el tamaño de la paleta, se reinicia todo
+    if (paletaActual.length !== total) {
+      paletaActual = [];
+      generarColores();
+      return;
     }
 
-    // Cada color se guarda como un objeto dentro del array
-    const color = {
-      rojo: rojo,
-      verde: verde,
-      azul: azul,
-    };
+    // Solo se regeneran los colores que tienen bloqueado: false
+    for (let i = 0; i < paletaActual.length; i++) {
+      if (paletaActual[i].bloqueado === false) {
+        let rojo = Math.min(255, Math.max(0, rojoBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+        let verde = Math.min(255, Math.max(0, verdeBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
+        let azul = Math.min(255, Math.max(0, azulBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
 
-    // Se agrega el objeto al array con push()
-    paletaActual.push(color);
+        // Se actualiza el objeto en el array manteniendo bloqueado: false
+        paletaActual[i] = { rojo: rojo, verde: verde, azul: azul, bloqueado: false };
+      }
+      // Si bloqueado: true, el objeto del array no se toca
+    }
   }
 }
 
@@ -109,14 +123,42 @@ function renderizarPaleta() {
 
     const tarjeta = document.createElement("div");
     const textoColor = document.createElement("span");
+    const candado = document.createElement("span");
 
     tarjeta.className = "color-card";
     textoColor.className = "valor-color";
+    candado.className = "candado";
+
+    // Si el color está bloqueado, muestra 🔒, si no, muestra 🔓
+    candado.textContent = color.bloqueado ? "🔒" : "🔓";
+
     tarjeta.style.backgroundColor = "rgb(" + color.rojo + ", " + color.verde + ", " + color.azul + ")";
     textoColor.textContent = obtenerCodigoColor(color);
+
+    tarjeta.appendChild(candado);
     tarjeta.appendChild(textoColor);
 
-    // Al hacer clic se copia el código al portapapeles
+    // Clic en el candado: bloquea o desbloquea el color
+    candado.addEventListener("click", function (evento) {
+      // Evita que el clic en el candado también copie el color
+      evento.stopPropagation();
+
+      // Se cambia el valor de bloqueado en el array (true → false, false → true)
+      paletaActual[i].bloqueado = !paletaActual[i].bloqueado;
+
+      // Se actualiza el emoji del candado según el nuevo estado
+      candado.textContent = paletaActual[i].bloqueado ? "🔒" : "🔓";
+
+      if (paletaActual[i].bloqueado) {
+        mostrarMensaje("Color bloqueado 🔒");
+        tarjeta.classList.add("bloqueada");
+      } else {
+        mostrarMensaje("Color desbloqueado 🔓");
+        tarjeta.classList.remove("bloqueada");
+      }
+    });
+
+    // Clic en la tarjeta: copia el código al portapapeles
     tarjeta.addEventListener("click", function () {
       const colorSeleccionado = textoColor.textContent;
 
@@ -129,24 +171,27 @@ function renderizarPaleta() {
         });
     });
 
+    // Si el color estaba bloqueado, se aplica la clase visual desde el inicio
+    if (color.bloqueado) {
+      tarjeta.classList.add("bloqueada");
+    }
+
     paleta.appendChild(tarjeta);
   }
 }
 
 function actualizarFormato() {
-  // Se recorren todas las tarjetas del DOM y se actualiza el texto del color
   const tarjetas = document.querySelectorAll(".color-card");
 
   for (let i = 0; i < tarjetas.length; i++) {
     const textoColor = tarjetas[i].querySelector(".valor-color");
-    // Se usa el array paletaActual para obtener los valores RGB del color
     textoColor.textContent = obtenerCodigoColor(paletaActual[i]);
   }
 }
 
 function crearPaleta() {
-  generarColores();      // 1. Genera los colores y los guarda en el array
-  renderizarPaleta();    // 2. Dibuja las tarjetas en pantalla desde el array
+  generarColores();
+  renderizarPaleta();
   mostrarMensaje("Haz generado una nueva paleta de " + tamanoPaleta.value + " colores");
 }
 
