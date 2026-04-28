@@ -61,6 +61,20 @@ function obtenerCodigoColor(color) {
   }
 }
 
+// --- NUEVA FUNCIÓN: calcula si el texto debe ser blanco o negro ---
+// Usa la fórmula de luminosidad perceptual: el ojo humano es más
+// sensible al verde, luego al rojo, y menos al azul.
+// Si el resultado es mayor a 128, el color es claro → texto negro
+// Si el resultado es menor a 128, el color es oscuro → texto blanco
+function calcularColorTexto(rojo, verde, azul) {
+  const luminosidad = (rojo * 0.299) + (verde * 0.587) + (azul * 0.114);
+  if (luminosidad > 128) {
+    return "#000000"; // Color claro → texto negro
+  } else {
+    return "#ffffff"; // Color oscuro → texto blanco
+  }
+}
+
 // --- FUNCIONES DE PALETA ---
 
 function generarColores() {
@@ -70,8 +84,6 @@ function generarColores() {
   const verdeBase = Math.floor(Math.random() * 256);
   const azulBase = Math.floor(Math.random() * 256);
 
-  // Si el array está vacío, lo llenamos desde cero
-  // Si ya tiene colores, solo reemplazamos los que NO están bloqueados
   if (paletaActual.length === 0) {
     for (let i = 0; i < total; i++) {
       let rojo = rojoBase;
@@ -84,40 +96,33 @@ function generarColores() {
         azul = Math.min(255, Math.max(0, azulBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
       }
 
-      // bloqueado: false significa que el color puede cambiar al regenerar
       paletaActual.push({ rojo: rojo, verde: verde, azul: azul, bloqueado: false });
     }
   } else {
-    // Si cambia el tamaño de la paleta, se reinicia todo
     if (paletaActual.length !== total) {
       paletaActual = [];
       generarColores();
       return;
     }
 
-    // Solo se regeneran los colores que tienen bloqueado: false
     for (let i = 0; i < paletaActual.length; i++) {
       if (paletaActual[i].bloqueado === false) {
         let rojo = Math.min(255, Math.max(0, rojoBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
         let verde = Math.min(255, Math.max(0, verdeBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
         let azul = Math.min(255, Math.max(0, azulBase + Math.floor(Math.random() * (rango * 2 + 1)) - rango));
 
-        // Se actualiza el objeto en el array manteniendo bloqueado: false
         paletaActual[i] = { rojo: rojo, verde: verde, azul: azul, bloqueado: false };
       }
-      // Si bloqueado: true, el objeto del array no se toca
     }
   }
 }
 
 function renderizarPaleta() {
-  // Se eliminan las tarjetas anteriores del DOM
   const tarjetasViejas = document.querySelectorAll(".color-card");
   for (let i = 0; i < tarjetasViejas.length; i++) {
     tarjetasViejas[i].remove();
   }
 
-  // Se recorre el array paletaActual para crear una tarjeta por cada color
   for (let i = 0; i < paletaActual.length; i++) {
     const color = paletaActual[i];
 
@@ -129,24 +134,23 @@ function renderizarPaleta() {
     textoColor.className = "valor-color";
     candado.className = "candado";
 
-    // Si el color está bloqueado, muestra 🔒, si no, muestra 🔓
     candado.textContent = color.bloqueado ? "🔒" : "🔓";
-
     tarjeta.style.backgroundColor = "rgb(" + color.rojo + ", " + color.verde + ", " + color.azul + ")";
     textoColor.textContent = obtenerCodigoColor(color);
+
+    // Se calcula el color del texto según el fondo de la tarjeta
+    const colorTexto = calcularColorTexto(color.rojo, color.verde, color.azul);
+
+    // Se aplica el color al texto del código y al candado
+    textoColor.style.color = colorTexto;
+    candado.style.color = colorTexto;
 
     tarjeta.appendChild(candado);
     tarjeta.appendChild(textoColor);
 
-    // Clic en el candado: bloquea o desbloquea el color
     candado.addEventListener("click", function (evento) {
-      // Evita que el clic en el candado también copie el color
       evento.stopPropagation();
-
-      // Se cambia el valor de bloqueado en el array (true → false, false → true)
       paletaActual[i].bloqueado = !paletaActual[i].bloqueado;
-
-      // Se actualiza el emoji del candado según el nuevo estado
       candado.textContent = paletaActual[i].bloqueado ? "🔒" : "🔓";
 
       if (paletaActual[i].bloqueado) {
@@ -158,7 +162,6 @@ function renderizarPaleta() {
       }
     });
 
-    // Clic en la tarjeta: copia el código al portapapeles
     tarjeta.addEventListener("click", function () {
       const colorSeleccionado = textoColor.textContent;
 
@@ -171,7 +174,6 @@ function renderizarPaleta() {
         });
     });
 
-    // Si el color estaba bloqueado, se aplica la clase visual desde el inicio
     if (color.bloqueado) {
       tarjeta.classList.add("bloqueada");
     }
