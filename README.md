@@ -370,6 +370,60 @@ Para desplegar una nueva versión basta con hacer `git push` a la rama `main`. G
 
 ---
 
+## 📥 Cómo descargar y ejecutar sin saber programar
+
+Si no tienes experiencia en programación, puedes usar la app de estas dos formas:
+
+### Opción 1 — Directo desde el navegador (más fácil)
+Simplemente abre el siguiente enlace y listo, no necesitas instalar nada:
+
+👉 [https://jorgemon85.github.io/ProyectoM1_JorgeAlbertoMonsalve/](https://jorgemon85.github.io/ProyectoM1_JorgeAlbertoMonsalve/)
+
+### Opción 2 — Descargar el proyecto a tu computadora
+
+1. **Descarga el proyecto**
+   - Entra al repositorio en GitHub.
+   - Haz clic en el botón verde **"Code"**.
+   - Selecciona **"Download ZIP"**.
+   - Se descargará un archivo comprimido en tu computadora.
+
+2. **Descomprime el archivo**
+   - Busca el archivo descargado (generalmente en "Descargas").
+   - Haz clic derecho → **"Extraer todo"** o **"Descomprimir"**.
+   - Se creará una carpeta con el proyecto.
+
+3. **Abre la aplicación**
+   - Entra a la carpeta que se creó.
+   - Busca el archivo llamado **index.html**.
+   - Haz doble clic sobre ese archivo.
+   - Se abrirá automáticamente en tu navegador.
+
+👉 Listo. Ya puedes usar la app sin instalar nada más.
+
+---
+
+## 🚧 Posibles mejoras futuras
+
+Funcionalidades que podrían agregarse en versiones futuras del proyecto:
+
+- **💾 Guardado de paletas en localStorage:** guardar paletas favoritas para que no se pierdan al recargar la página.
+- **📋 Copiar toda la paleta:** botón para copiar todos los códigos de color de una vez.
+- **🖼️ Exportar como imagen:** descargar la paleta generada como archivo PNG.
+- **🌙 Modo oscuro:** toggle para cambiar entre tema claro y oscuro.
+- **📱 Optimización mobile:** mejorar la distribución de elementos en pantallas pequeñas.
+- **♿ Accesibilidad avanzada:** mejorar soporte para lectores de pantalla con atributos ARIA.
+- **🌍 Internacionalización:** soporte para múltiples idiomas (español, inglés, portugués).
+
+---
+
+## 📂 Documentación adicional
+
+La carpeta de documentación del proyecto incluye el video demostrativo del flujo de la app y la documentación del uso de IA con prompts y resultados:
+
+👉 [Ver documentación en Google Drive](https://drive.google.com/drive/folders/11OaApIbbnJ_lC3eBUyOVrNuE9mFE4Eg1?usp=sharing)
+
+---
+
 ## 👨‍💻 Autor
 
 **Jorge Alberto Monsalve**
