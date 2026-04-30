@@ -327,9 +327,13 @@ ProyectoM1_JorgeAlbertoMonsalve/
 
 ## 🚀 Cómo ejecutar el proyecto localmente
 
+### Para desarrolladores — clonar con Git
+
+Si tienes Git instalado, abre una terminal (Git Bash, PowerShell o CMD) y ejecuta estos comandos uno por uno:
+
 1. Clona el repositorio:
 ```bash
-git clone git@github.com:jorgemon85/ProyectoM1_JorgeAlbertoMonsalve.git
+git clone https://github.com/jorgemon85/ProyectoM1_JorgeAlbertoMonsalve.git
 ```
 
 2. Entra a la carpeta:
@@ -337,7 +341,54 @@ git clone git@github.com:jorgemon85/ProyectoM1_JorgeAlbertoMonsalve.git
 cd ProyectoM1_JorgeAlbertoMonsalve
 ```
 
-3. Abre `index.html` en tu navegador. No requiere instalación de dependencias ni servidor.
+3. Abre el proyecto en VS Code:
+```bash
+code .
+```
+
+4. Dentro de VS Code, busca el archivo `index.html` en el explorador de archivos (panel izquierdo) y ábrelo en tu navegador.
+
+---
+
+### Para desarrolladores inexpertos — paso a paso con VS Code
+
+Si es la primera vez que clonas un repositorio, sigue estos pasos:
+
+1. **Instala Git** desde [git-scm.com](https://git-scm.com/download/win) si aún no lo tienes.
+
+2. **Instala VS Code** desde [code.visualstudio.com](https://code.visualstudio.com/) si aún no lo tienes.
+
+3. **Copia el link del repositorio:**
+   - Entra a [github.com/jorgemon85/ProyectoM1_JorgeAlbertoMonsalve](https://github.com/jorgemon85/ProyectoM1_JorgeAlbertoMonsalve)
+   - Haz clic en el botón verde **"Code"**
+   - Copia el link que aparece debajo de **HTTPS**
+
+4. **Abre una terminal:**
+   - En Windows: presiona `Win + R`, escribe `cmd` y presiona Enter
+   - O abre **Git Bash** desde el menú de inicio
+
+5. **Navega a la carpeta donde quieres guardar el proyecto:**
+```bash
+cd Desktop
+```
+
+6. **Clona el repositorio pegando el link copiado:**
+```bash
+git clone https://github.com/jorgemon85/ProyectoM1_JorgeAlbertoMonsalve.git
+```
+
+7. **Abre la carpeta en VS Code:**
+```bash
+cd ProyectoM1_JorgeAlbertoMonsalve
+code .
+```
+
+8. **Ejecuta la app:**
+   - En VS Code, busca el archivo `index.html` en el panel izquierdo
+   - Haz clic derecho sobre él → **"Open with Live Server"** (si tienes la extensión instalada)
+   - O simplemente haz doble clic en el archivo desde el explorador de Windows
+
+> 💡 No necesitas instalar ninguna dependencia ni configurar un servidor. El proyecto funciona directamente abriendo `index.html`.
 
 ---
 
