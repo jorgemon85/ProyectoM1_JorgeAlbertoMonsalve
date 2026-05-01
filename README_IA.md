@@ -29,8 +29,8 @@ Claude identificó que el problema era la diferencia entre mayúsculas y minúsc
 
 **📸 Captura:** 
 
-![Captura](./Assets/Captura_1.png)
-![Captura](./Assets/Captura_2.png)
+![Captura 1](./Assets/Captura_1.png)
+![Captura 2](./Assets/Captura_2.png)
 ---
 
 ### 2. Refactorización del código para usar arrays
@@ -43,8 +43,8 @@ Claude refactorizó el `script.js` para guardar los colores como objetos dentro 
 
 **📸 Captura:** 
 
-![Captura](./Assets/Captura_3.png)
-![Captura](./Assets/Captura_4.png)
+![Captura 3](./Assets/Captura_3.png)
+![Captura 4](./Assets/Captura_4.png)
 
 ---
 
@@ -70,7 +70,7 @@ Claude implementó la función `calcularColorTexto()` usando la fórmula de lumi
 
 **📸 Captura:** 
 
-![Captura](./Assets/Captura_5.png)
+![Captura 5](./Assets/Captura_5.png)
 
 ---
 
